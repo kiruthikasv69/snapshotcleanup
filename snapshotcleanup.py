@@ -31,7 +31,7 @@ def lambda_handler(event, context):
                     ec2.delete_snapshot(SnapshotId=snapshot_id)
                     print(f"Deleted EBS snapshot {snapshot_id} as it was taken from a volume not attached to any running instance.")
             except ec2.exceptions.ClientError as e:
-                if e.response['Error']['Code'] == 'InvalidVolume.NotFound':
+                if e.response['Error']['Code'] == 'InvalidVolume.NotFound': #If the volume doesn’t exist anymore, Boto3 will raise a ClientError with code InvalidVolume.NotFound.
                     # The volume associated with the snapshot is not found (it might have been deleted)
-                    ec2.delete_snapshot(SnapshotId=snapshot_id)
+                    ec2.delete_snapshot(SnapshotId=snapshot_id) 
                     print(f"Deleted EBS snapshot {snapshot_id} as its associated volume was not found.")
